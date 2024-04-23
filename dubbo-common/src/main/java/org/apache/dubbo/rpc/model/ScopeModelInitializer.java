@@ -19,6 +19,9 @@ package org.apache.dubbo.rpc.model;
 import org.apache.dubbo.common.extension.ExtensionScope;
 import org.apache.dubbo.common.extension.SPI;
 
+/**
+ * 注意spi通过策略回去读取自动目录的配置，这里要只要多模块相互应用
+ */
 @SPI(scope = ExtensionScope.SELF)
 public interface ScopeModelInitializer {
 

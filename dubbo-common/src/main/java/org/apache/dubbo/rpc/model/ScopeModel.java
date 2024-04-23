@@ -70,6 +70,9 @@ public abstract class ScopeModel implements ExtensionAccessor {
 
     private volatile ExtensionDirector extensionDirector;
 
+    /**
+     * 每个领域持有一个factory作为bean生产
+     */
     private volatile ScopeBeanFactory beanFactory;
     private final List<ScopeModelDestroyListener> destroyListeners = new CopyOnWriteArrayList<>();
 

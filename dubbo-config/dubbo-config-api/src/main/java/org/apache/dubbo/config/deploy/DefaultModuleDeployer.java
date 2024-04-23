@@ -170,7 +170,7 @@ public class DefaultModuleDeployer extends AbstractDeployer<ModuleModel> impleme
 
             initialize();
 
-            // export services
+            // export services  子模块启动暴露服务
             exportServices();
 
             // prepare application instance
@@ -179,7 +179,7 @@ public class DefaultModuleDeployer extends AbstractDeployer<ModuleModel> impleme
                 applicationDeployer.prepareInternalModule();
             }
 
-            // refer services
+            // refer services 初始化应用服务
             referServices();
 
             // if no async export/refer services, just set started

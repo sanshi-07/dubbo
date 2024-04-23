@@ -220,6 +220,7 @@ public class FrameworkModel extends ScopeModel {
 
     /**
      * Get or create default application model
+     * 创建这些model的时候都是加锁
      * @return
      */
     public ApplicationModel defaultApplication() {

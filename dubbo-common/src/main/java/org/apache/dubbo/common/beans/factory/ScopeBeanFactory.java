@@ -43,6 +43,7 @@ import static org.apache.dubbo.common.constants.LoggerCodeConstants.CONFIG_FAILE
 
 /**
  * A bean factory for internal sharing.
+ * 支持双亲委派
  */
 public class ScopeBeanFactory {
 
@@ -126,6 +127,7 @@ public class ScopeBeanFactory {
 
     public <T> T getOrRegisterBean(String name, Class<T> type) {
         T bean = getBean(name, type);
+        //又是一个双重校验饿汉模式  本节点或父节点找不到， 才交由本地进行初始化
         if (bean == null) {
             // lock by type
             synchronized (type) {

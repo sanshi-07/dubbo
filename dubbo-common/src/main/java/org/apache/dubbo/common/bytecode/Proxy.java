@@ -115,6 +115,13 @@ public class Proxy {
         return sb.toString();
     }
 
+    /**
+     * 重新生成一个代理类 每个方法指向新歌handle类，这样支持handle类去做拓展
+     * @param cl
+     * @param ics
+     * @param domain
+     * @return
+     */
     private static Class<?> buildProxyClass(ClassLoader cl, Class<?>[] ics, ProtectionDomain domain) {
         ClassGenerator ccp = null;
         try {

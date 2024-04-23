@@ -37,18 +37,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.apache.dubbo.common.constants.LoggerCodeConstants.COMMON_UNEXPECTED_EXCEPTION;
 
+/**
+ * 应用领域环境参数实体
+ */
 public class Environment extends LifecycleAdapter implements ApplicationExt {
     private static final ErrorTypeAwareLogger logger = LoggerFactory.getErrorTypeAwareLogger(Environment.class);
 
     public static final String NAME = "environment";
 
-    // dubbo properties in classpath
+    // dubbo properties in classpath  读取dubbo.properties文件配置
     private PropertiesConfiguration propertiesConfiguration;
 
-    // java system props (-D)
+    // java system props (-D) 系统启动参数
     private SystemConfiguration systemConfiguration;
 
-    // java system environment
+    // java system environment 环境变量
     private EnvironmentConfiguration environmentConfiguration;
 
     // external config, such as config-center global/default config
@@ -62,6 +65,7 @@ public class Environment extends LifecycleAdapter implements ApplicationExt {
 
     protected CompositeConfiguration globalConfiguration;
 
+    //全局配置
     protected List<Map<String, String>> globalConfigurationMaps;
 
     private CompositeConfiguration defaultDynamicGlobalConfiguration;

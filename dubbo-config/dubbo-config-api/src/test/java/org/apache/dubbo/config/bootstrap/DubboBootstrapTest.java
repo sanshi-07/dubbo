@@ -345,6 +345,7 @@ class DubboBootstrapTest {
             registryConfig.setUseAsMetadataCenter(false);
             registryConfig.setUseAsConfigCenter(false);
 
+            //其实这里不同配置在不同领域中
             DubboBootstrap.getInstance()
                     .application(applicationConfig)
                     .registry(registryConfig)

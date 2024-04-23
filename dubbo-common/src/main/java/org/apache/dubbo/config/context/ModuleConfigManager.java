@@ -52,6 +52,7 @@ import static org.apache.dubbo.config.AbstractConfig.getTagName;
 
 /**
  * Manage configs of module
+ * 所以这里是一新的config manage 和 configMange一样 extends abstractConfigManager
  */
 public class ModuleConfigManager extends AbstractConfigManager implements ModuleExt {
 

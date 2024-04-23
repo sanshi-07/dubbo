@@ -58,6 +58,7 @@ public class ApplicationModel extends ScopeModel {
     private volatile Environment environment;
     private volatile ConfigManager configManager;
     private volatile ServiceRepository serviceRepository;
+    //领域对象持有相应领域的启动类
     private volatile ApplicationDeployer deployer;
 
     private final FrameworkModel frameworkModel;
@@ -117,13 +118,15 @@ public class ApplicationModel extends ScopeModel {
             for (String listenerName : listenerNames) {
                 extensionLoader.getExtension(listenerName).init();
             }
-
+            // 初始化applicationExt 目前看到的ext只有configManage
             initApplicationExts();
 
             ExtensionLoader<ScopeModelInitializer> initializerExtensionLoader =
                     this.getExtensionLoader(ScopeModelInitializer.class);
+            //通过dubbo spi完成领域对象的初始化
             Set<ScopeModelInitializer> initializers = initializerExtensionLoader.getSupportedExtensionInstances();
             for (ScopeModelInitializer initializer : initializers) {
+                //初始
                 initializer.initializeApplicationModel(this);
             }
 
@@ -203,6 +206,11 @@ public class ApplicationModel extends ScopeModel {
         }
     }
 
+    /**
+     * 初始化创造领域环境变量持有对象
+     *
+     * @return
+     */
     @Override
     public Environment modelEnvironment() {
         if (environment == null) {

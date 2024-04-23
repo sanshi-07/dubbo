@@ -417,6 +417,7 @@ public abstract class ServiceConfigBase<T> extends AbstractServiceConfig {
 
     /**
      * export service and auto start application instance
+     * 每个service bean独立
      */
     public final void export() {
         export(RegisterTypeEnum.AUTO_REGISTER);

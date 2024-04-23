@@ -110,6 +110,7 @@ public final class DubboBootstrap {
         if (instance == null) {
             synchronized (DubboBootstrap.class) {
                 if (instance == null) {
+                    //获取module作为领域
                     instance = DubboBootstrap.getInstance(ApplicationModel.defaultModel());
                 }
             }
@@ -166,8 +167,10 @@ public final class DubboBootstrap {
         environment = applicationModel.modelEnvironment();
 
         executorRepository = ExecutorRepository.getInstance(applicationModel);
+        //实际启动类
         applicationDeployer = applicationModel.getDeployer();
         // listen deploy events
+        // 事件监听
         applicationDeployer.addDeployListener(new DeployListenerAdapter<ApplicationModel>() {
             @Override
             public void onStarted(ApplicationModel scopeModel) {
@@ -505,6 +508,7 @@ public final class DubboBootstrap {
         if (CollectionUtils.isEmpty(protocolConfigs)) {
             return this;
         }
+        //所有的配置都会set对应的module对象 确保领域划分
         for (ProtocolConfig protocolConfig : protocolConfigs) {
             protocolConfig.setScopeModel(applicationModel);
             configManager.addProtocol(protocolConfig);
@@ -544,6 +548,7 @@ public final class DubboBootstrap {
     }
 
     public DubboBootstrap service(ServiceConfig<?> serviceConfig, ModuleModel moduleModel) {
+        //这里有个不同，就是serviceConfig不再applicationModule了，而是在moduleModel中了
         serviceConfig.setScopeModel(moduleModel);
         moduleModel.getConfigManager().addService(serviceConfig);
         return this;

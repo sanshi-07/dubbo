@@ -108,7 +108,7 @@ public class InstantiationStrategy {
     }
 
     private Object getArgumentValueForType(Class<?> parameterType) {
-        // get scope mode value
+        // get scope mode value 让初始化的实列 构造方法获取
         if (scopeModelAccessor != null) {
             if (parameterType == ScopeModel.class) {
                 return scopeModelAccessor.getScopeModel();

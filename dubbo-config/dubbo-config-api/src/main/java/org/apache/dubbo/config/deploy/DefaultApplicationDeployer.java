@@ -108,6 +108,8 @@ import static org.apache.dubbo.remoting.Constants.CLIENT_KEY;
 
 /**
  * initialize and start application instance
+ * 这个是 org.apache.dubbo.config.ConfigScopeModelInitializer
+ * 走领域对象的beanfactory构造
  */
 public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationModel> implements ApplicationDeployer {
 
@@ -139,6 +141,10 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
     private final Object destroyLock = new Object();
     private final Object internalModuleLock = new Object();
 
+    /**
+     * beanFactory 初始化创建
+     * @param applicationModel
+     */
     public DefaultApplicationDeployer(ApplicationModel applicationModel) {
         super(applicationModel);
         this.applicationModel = applicationModel;
@@ -208,26 +214,27 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
             return;
         }
         // Ensure that the initialization is completed when concurrent calls
+        // dubbo 很多初始化的地方都会上锁  单列都会进行饿汉双重校验
         synchronized (startLock) {
             if (initialized) {
                 return;
             }
             onInitialize();
 
-            // register shutdown hook
+            // register shutdown hook 启动钩子
             registerShutdownHook();
-
+            // 配置中心
             startConfigCenter();
 
             loadApplicationConfigs();
-
+            //启动子模块
             initModuleDeployers();
-
+            //没看
             initMetricsReporter();
-
+            //没看
             initMetricsService();
 
-            // @since 2.7.8
+            // @since 2.7.8 元数据中心 注册中心
             startMetadataCenter();
 
             initialized = true;
@@ -257,7 +264,7 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
 
     private void startConfigCenter() {
 
-        // load application config
+        // load application config 为啥值load不使用？ 预加载？
         configManager.loadConfigsOfTypeFromProps(ApplicationConfig.class);
 
         // try set model name
@@ -267,7 +274,7 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
 
         // load config centers
         configManager.loadConfigsOfTypeFromProps(ConfigCenterConfig.class);
-
+        //用注册中心作为原数据中心
         useRegistryAsConfigCenterIfNecessary();
 
         // check Config Center
@@ -295,7 +302,7 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
                 environment.updateExternalConfigMap(configCenter.getExternalConfiguration());
                 environment.updateAppExternalConfigMap(configCenter.getAppExternalConfiguration());
 
-                // Fetch config from remote config center
+                // Fetch config from remote config center 开始链接远程获取配置了
                 compositeDynamicConfiguration.addConfiguration(prepareEnvironment(configCenter));
             }
             environment.setDynamicConfiguration(compositeDynamicConfiguration);
@@ -303,7 +310,7 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
     }
 
     private void startMetadataCenter() {
-
+        //没指定的时候取一个正常链接的注册中心地址作为元数据中心地址
         useRegistryAsMetadataCenterIfNecessary();
 
         ApplicationConfig applicationConfig = getApplication();
@@ -548,7 +555,8 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
         Boolean configuredValue = usedRegistryAsCenter.get();
         if (configuredValue != null) { // If configured, take its value.
             supported = configuredValue.booleanValue();
-        } else { // Or check the extension existence
+        } else {
+            // Or check the extension existence  只校验了协议
             String protocol = registryConfig.getProtocol();
             supported = supportsExtension(extensionClass, protocol);
             if (logger.isInfoEnabled()) {
@@ -1132,6 +1140,11 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
         shutdownHookCallbacks.callback();
     }
 
+    /**
+     * 子模块被父模块调用start方法执行后，回调父模块的这个方法，检查各个子模块的状态决定父模块的状态
+     * @param moduleModel
+     * @param state
+     */
     @Override
     public void notifyModuleChanged(ModuleModel moduleModel, DeployState state) {
         checkState(moduleModel, state);
@@ -1183,6 +1196,10 @@ public class DefaultApplicationDeployer extends AbstractDeployer<ApplicationMode
         }
     }
 
+    /**
+     * 通过计算自模块的启动情况，决定应用模块的状态
+     * @return
+     */
     private DeployState calculateState() {
         DeployState newState = DeployState.UNKNOWN;
         int pending = 0, starting = 0, started = 0, stopping = 0, stopped = 0, failed = 0;

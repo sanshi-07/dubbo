@@ -89,6 +89,7 @@ public abstract class AbstractDeployer<E extends ScopeModel> implements Deployer
         return state;
     }
 
+    //支持事件监听
     @Override
     public void addDeployListener(DeployListener<E> listener) {
         listeners.add(listener);

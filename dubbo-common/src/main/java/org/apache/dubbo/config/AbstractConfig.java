@@ -118,6 +118,8 @@ public abstract class AbstractConfig implements Serializable {
      * <p>
      * <b>NOTE:</b> the model maybe changed during config processing,
      * the extension spi instance needs to be reinitialized after changing the model!
+     *
+     * 每一个配置对象都持有一个领域对象
      */
     private transient volatile ScopeModel scopeModel;
 

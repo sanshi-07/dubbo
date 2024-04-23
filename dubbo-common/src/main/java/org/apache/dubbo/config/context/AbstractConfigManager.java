@@ -501,6 +501,12 @@ public abstract class AbstractConfigManager extends LifecycleAdapter {
 
     public abstract void loadConfigs();
 
+    /**
+     * 感觉像是在加载配置
+     * @param cls
+     * @return
+     * @param <T>
+     */
     public <T extends AbstractConfig> List<T> loadConfigsOfTypeFromProps(Class<T> cls) {
         List<T> tmpConfigs = new ArrayList<>();
         PropertiesConfiguration properties = environment.getPropertiesConfiguration();

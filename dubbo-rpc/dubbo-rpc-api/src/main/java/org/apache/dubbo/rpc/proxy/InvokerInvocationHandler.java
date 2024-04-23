@@ -47,6 +47,9 @@ public class InvokerInvocationHandler implements InvocationHandler {
         this.serviceModel = url.getServiceModel();
     }
 
+    /**
+     * 每个代理方法都调用这个方法 在这里实现
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.getDeclaringClass() == Object.class) {

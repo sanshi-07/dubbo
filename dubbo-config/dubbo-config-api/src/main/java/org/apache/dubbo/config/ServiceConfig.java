@@ -130,14 +130,21 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
      */
     private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<>();
 
+    /**
+     * 协议层
+     */
     private Protocol protocolSPI;
 
     /**
      * A {@link ProxyFactory} implementation that will generate a exported service proxy,the JavassistProxyFactory is its
      * default implementation
+     * 代理层
      */
     private ProxyFactory proxyFactory;
 
+    /**
+     * 服务提供的model
+     */
     private ProviderModel providerModel;
 
     /**
@@ -316,7 +323,7 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
             // ensure start module, compatible with old api usage
             getScopeModel().getDeployer().start();
         }
-
+        //加锁
         synchronized (this) {
             if (this.exported) {
                 return;
@@ -939,11 +946,12 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
                 || registerType == RegisterTypeEnum.AUTO_REGISTER_BY_DEPLOYER) {
             url = url.addParameter(REGISTER_KEY, false);
         }
-
+        //获取代理类 支持多种方式的代理类生成
         Invoker<?> invoker = proxyFactory.getInvoker(ref, (Class) interfaceClass, url);
         if (withMetaData) {
             invoker = new DelegateProviderMetaDataInvoker(invoker, this);
         }
+        //指定协议
         Exporter<?> exporter = protocolSPI.export(invoker);
         exporters
                 .computeIfAbsent(registerType, k -> new CopyOnWriteArrayList<>())

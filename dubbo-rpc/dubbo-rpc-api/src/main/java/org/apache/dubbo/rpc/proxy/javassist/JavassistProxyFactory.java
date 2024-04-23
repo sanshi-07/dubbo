@@ -76,6 +76,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
         }
     }
 
+
     @Override
     public <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) {
         try {

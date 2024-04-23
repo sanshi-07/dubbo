@@ -21,6 +21,7 @@ import org.apache.dubbo.rpc.model.ScopeModel;
 public interface DeployListener<E extends ScopeModel> {
     /**
      * Useful to inject some configuration like MetricsConfig, RegistryConfig, etc.
+     * 这里可以看到监听事件可以对 领域对象进行操纵，支持自动监听应用的状态去修改
      */
     void onInitialize(E scopeModel);
 
